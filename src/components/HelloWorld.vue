@@ -7,6 +7,12 @@
       <h1>Sign up for reminder emails!</h1>
     </div>
 
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      With Bootstrap!
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
 
     <div>
       <h3>About you</h3>
@@ -18,6 +24,7 @@
       <p>Hi{{firstName }}! What medicine do you want to be reminded about?</p>
 
       <input v-model="medicine" placeholder="Medicine">
+      <input v-model="supplyDays" placeholder="Days of RX Supply">
     </div>
 
     <p v-show="submitted">
