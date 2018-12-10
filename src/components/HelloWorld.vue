@@ -15,17 +15,18 @@
       <input v-model="email" placeholder="Your Email">
 
       <h3>Medicine</h3>
-      <p>What medicine do you want to be reminded about?</p>
+      <p>Hi{{firstName }}! What medicine do you want to be reminded about?</p>
 
       <input v-model="medicine" placeholder="Medicine">
     </div>
 
-    <p v-show="submitted">Hi {{ firstName }}! <br> 
-    Thanks for signing up for a reminder for 
-    {{medicine}}.
-    We'll send it to {{email}} on 
+    <p v-show="submitted">
+      Thanks for signing up for a reminder for 
+      {{medicine}}.
+      We'll send it to {{email}} on 
       <!-- {{reminderDate}}  -->
-    to give you a little notice.</p>
+      to give you a little notice.
+    </p>
 
     <button v-on:click="submitted=true">Set Reminder</button>
 
@@ -52,9 +53,9 @@ export default {
         if (typeof this.fullName !== 'undefined') {
           var names = this.fullName.split(" ");
           var firstname = names[0];
-        return firstname;      
+        return ' '+firstname;      
         } else { 
-          return 'not yet defined by page'
+          return ''
         }
     }
   }
