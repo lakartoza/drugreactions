@@ -56,22 +56,20 @@
 
         <div class="col-3" >
           <input v-model="medicine" placeholder="Medicine" class="stretched_input">
-          <button> Go </button>
+          <button v-on:click="_submitted_medicine=true"> Go </button>
         </div>
         <div class="col"></div>
       </div>
 
-      <div class="row">
+      <div v-show="_submitted_medicine" class="row">
         <div class="col"></div>
 
+          <p>How much supply of {{ medicine }} do you have?</p>
 
         <div class="col-3">          
           <select v-model="supplyDays">
-            <option :value="0" disabled selected>Days of RX Supply</option>
-            <option :value="30">30 days</option>
-            <option :value="60">60 days</option>
-            <option :value="90">90 days</option>
-            <option :value="120">120 days</option>
+            <option :value="0" disabled selected>Days of {{medicine}} Supply</option>
+            <option v-for="period in [30,60,90,120]" :value="period"> {{period}} days</option>
           </select>
           </div>
 
@@ -86,21 +84,21 @@
         </div>
 
       
+        <div v-show="submitted">
+        <p>
+          We'll send you an reminder to refill your 
+          {{ medicine}} subscription on 
+          {{ reminderDate.Month}}-{{ reminderDate.Day}} {{ reminderDate.Year}}.
 
-        <p v-show="submitted">
-          Thanks for signing up for a reminder for 
-          {{medicine}}.
-          We'll send it to {{email}} on {{supplyDays}}
-          <!-- {{reminderDate}}  -->
-          to give you a little notice.
-        </p>
-
+        <p><a href="http://motherfuckingwebsite.com/">Learn how
+            </a> to take HoneyBee off your spam. 
+          </p>
+        </div>
         <button v-on:click="submitted=true">Set Reminder</button>
       </div>  
     </div>
 
   </div>
-
 
 
 
@@ -116,13 +114,16 @@ export default {
     email: String,
     medicine: String,
     submitted: Boolean,
+    _submitted_medicine: Boolean,
     supplyDays: Number,
+    reminderDate: Array,
   },
 
 
   data: {
     submitted:false,
-    supplyDays:30
+    _submitted_medicine: false,
+    supplyDays:0
   },
 
 
@@ -137,10 +138,40 @@ export default {
         } else { 
           return ''
         }
+    },
+
+    reminderDate: function () {
+      if (typeof this.supplyDays !== 'undefined') {
+        var currentDate = new Date();
+        // add supplyDays to current date
+        var reminderDate = currentDate.addDays(this.supplyDays - 5);
+        var Day = reminderDate.toString().split(" ")[2];
+        var Month = reminderDate.toString().split(" ")[1];
+        var Year = reminderDate.toString().split(" ")[3];
+
+        return {Day,Month,Year}
+      } else { 
+          return ''
+      }
     }
   }
 
 }
+
+
+//Extend the javascript Date object 
+Date.prototype.addDays = function(days) {
+    this.setDate(this.getDate() + parseInt(days));
+    return this;
+};
+
+//Extend to give month names
+Date.prototype.monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
