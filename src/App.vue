@@ -1,5 +1,12 @@
 <template>
   <div class="centered" id="app">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      In this project, I used Bootstrap and Vue hosted on Github Pages. <a target="_blank" href="https://github.com/lakartoza/drugreactions/commits/master">See commits here</a>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+
     <img alt="Vue logo" src="./assets/rx_reminder.png">
     <HelloWorld/>
   </div>
