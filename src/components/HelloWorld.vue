@@ -12,7 +12,7 @@
     <div class="container">
       <div class="row">
         <div class="col"></div>
-        <div class="col-6 lefted">
+        <div class="col-md-6 col-sm-12 lefted">
           <h3>First, about you:</h3>
           <br>
         </div>
@@ -23,12 +23,12 @@
       <div class="row">
         <div class="col"></div>
 
-        <div class="col-3">
+        <div class="col-md-6 col-sm-12">
           <input v-model="fullName" placeholder="Full Name" class="stretched_input">
-        </div>
-        <div class="col-3">
           <input v-model="email" placeholder="Your Email" class="stretched_input">
+
         </div>
+
 
         <div class="col"></div>
       </div>
@@ -37,7 +37,7 @@
 
       <div class="row">
         <div class="col"></div>
-        <div class="col-6 lefted">
+        <div class="col-md-6 col-sm-12 lefted">
           <h3>Remind me about...</h3>
           <br>
         </div>
@@ -48,7 +48,7 @@
 
       <div class="row">
         <div class="col"></div>
-        <div class="col-6">
+        <div class="col-md-6 col-sm-12">
           <p>Hi{{ firstName }}! What medicine do you want to be reminded about?</p>
         </div>
         <div class="col"></div>
@@ -217,6 +217,9 @@
 
 .stretched_input {
   width: -webkit-fill-available;
+  /*min-width: 150px;*/
+  max-width: 300px;
+  margin-bottom: 30px;
 }
 h3 {
   margin: 40px 0 0;
