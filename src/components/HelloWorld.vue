@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div>
 
 
     <div>
@@ -98,6 +98,8 @@
       </div>  
     </div>
 
+    <AdverseEffectsBox/>
+
   </div>
 
 
@@ -107,68 +109,72 @@
 
 <script>
 
-export default {
-  name: 'HelloWorld',
-  props: {
-    fullName: String,
-    email: String,
-    medicine: String,
-    submitted: Boolean,
-    _submitted_medicine: Boolean,
-    supplyDays: Number,
-    reminderDate: Array,
-  },
+  import AdverseEffectsBox from './AdverseEffectsBox.vue'
 
-
-  data: {
-    submitted:false,
-    _submitted_medicine: false,
-    supplyDays:0
-  },
-
-
-  computed: {
-
-    //Pick only firstName from fullName, assuming fullName=="fname lname" separated by ' '
-    firstName: function () {
-        if (typeof this.fullName !== 'undefined') {
-          var names = this.fullName.split(" ");
-          var firstname = names[0];
-        return ' '+firstname;      
-        } else { 
-          return ''
-        }
+  export default {
+    name: 'HelloWorld',
+    props: {
+      fullName: String,
+      email: String,
+      medicine: String,
+      submitted: Boolean,
+      _submitted_medicine: Boolean,
+      supplyDays: Number,
+      reminderDate: Array,
     },
 
-    reminderDate: function () {
-      if (typeof this.supplyDays !== 'undefined') {
-        var currentDate = new Date();
-        // add supplyDays to current date
-        var reminderDate = currentDate.addDays(this.supplyDays - 5);
-        var Day = reminderDate.toString().split(" ")[2];
-        var Month = reminderDate.toString().split(" ")[1];
-        var Year = reminderDate.toString().split(" ")[3];
 
-        return {Day,Month,Year}
-      } else { 
-          return ''
+    data: {
+      submitted:false,
+      _submitted_medicine: false,
+      supplyDays:0
+    },
+
+
+    computed: {
+
+      //Pick only firstName from fullName, assuming fullName=="fname lname" separated by ' '
+      firstName: function () {
+          if (typeof this.fullName !== 'undefined') {
+            var names = this.fullName.split(" ");
+            var firstname = names[0];
+          return ' '+firstname;      
+          } else { 
+            return ''
+          }
+      },
+
+      reminderDate: function () {
+        if (typeof this.supplyDays !== 'undefined') {
+          var currentDate = new Date();
+          // add supplyDays to current date
+          var reminderDate = currentDate.addDays(this.supplyDays - 5);
+          var Day = reminderDate.toString().split(" ")[2];
+          var Month = reminderDate.toString().split(" ")[1];
+          var Year = reminderDate.toString().split(" ")[3];
+
+          return {Day,Month,Year}
+        } else { 
+            return ''
+        }
       }
+    },
+    components: {
+      AdverseEffectsBox
     }
   }
 
-}
 
+  //Extend the javascript Date object 
+  Date.prototype.addDays = function(days) {
+      this.setDate(this.getDate() + parseInt(days));
+      return this;
+  };
 
-//Extend the javascript Date object 
-Date.prototype.addDays = function(days) {
-    this.setDate(this.getDate() + parseInt(days));
-    return this;
-};
-
-//Extend to give month names
-Date.prototype.monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
+  //Extend to give month names
+  Date.prototype.monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
 
 
 
