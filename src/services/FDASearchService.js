@@ -1,44 +1,16 @@
-var $ = require('jquery');
 
 
 
-export default class FDASearch {
-  //Functions for FDA API Calls//
-
-  constructor(drugSearchTerm) {
-    this.searchTerm = drugSearchTerm;
-  }
-
-  // AdverseEffects() {
-    
-  //   var searchURL = this.convertTermToURL(this.searchTerm);
-    
-  //   console.log("calling: "+searchURL);
-
-  //   $.get(searchURL)
-  //    .then( function (data){
-
-  //       // Load response adverse effects terms into variable `effects`
-  //       var effects = [];
-  //       for (var i in data.results) {
-  //         effects.push(data.results[i].term);
-  //       }
-  //       console.log(effects);
-  //       return effects;
-  //     });
+  //Supporting functions for FDA API Calls//
 
 
-  // }
-
-  //Supporting functions for Search API Calls//
-
-  convertTermToURL() {
+  export function convertTermToURL(human_search_input) {
     var baseURL = "https://api.fda.gov/drug/event.json?";
     var url_search_term;
     var search_url;
 
     //Process search term to fit url
-    url_search_term = this.searchTerm.toLowerCase();
+    url_search_term = human_search_input.toLowerCase();
     url_search_term = url_search_term.split(" ").join("+");
 
     //combine to make FDA url to GET 
@@ -47,5 +19,11 @@ export default class FDASearch {
     return search_url;
   }
 
-
-}
+  export function loadInfo_IntoVariable (results) {
+      var effects = [];
+      for (var i in results) {
+        effects.push(results[i].term);
+      
+      }
+      return effects;
+  }

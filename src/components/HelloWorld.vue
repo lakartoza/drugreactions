@@ -26,6 +26,9 @@
         <div class="col-3">
           <input v-model="fullName" placeholder="Full Name" class="stretched_input">
         </div>
+        <div class="col-3">
+          <input v-model="email" placeholder="Your Email" class="stretched_input">
+        </div>
 
         <div class="col"></div>
       </div>
@@ -56,7 +59,7 @@
 
         <div class="col-3" >
           <input v-model="searchTerm" placeholder="Medicine" class="stretched_input">
-          <button v-on:click="Go_handler" ref="AdverseEffectsSearch"> Go </button>
+          <button v-on:click="Go_handler" ref="AdverseEffectsSearch"> Search </button>
         </div>
         <div class="col"></div>
       </div>
@@ -79,26 +82,29 @@
 
 
       <div class="row">      
-        <div class="col-3">
-          <input v-model="email" placeholder="Your Email">
-        </div>
-
       
-        <div v-show="submitted">
-        <p>
-          We'll send you an reminder to refill your 
-          {{ searchTerm}} subscription on 
-          {{ reminderDate.Month}}-{{ reminderDate.Day}} {{ reminderDate.Year}}.
+        <div class="col"></div>
 
-        <p><a href="http://motherfuckingwebsite.com/">Learn how
-            </a> to take HoneyBee off your spam. 
-          </p>
+        <div v-show="submitted">
+          <p>
+            We'll send you an reminder to refill your 
+            {{ searchTerm}} subscription on 
+            {{ reminderDate.Month}}-{{ reminderDate.Day}} {{ reminderDate.Year}}.
+
+          <p><a href="http://motherfuckingwebsite.com/">Learn how
+              </a> to take HoneyBee off your spam. 
+            </p>
         </div>
-        <button v-on:click="submitted=true">Set Reminder</button>
+
+
+        <button v-show="_submitted_medicine" v-on:click="submitted=true">Set Reminder</button>
+        <div class="col"></div>
+
       </div>  
+
     </div>
 
-    <AdverseEffectsBox :searchTerm="searchTerm" :effects="effects"/>
+    <AdverseEffectsBox v-show="submitted" :searchTerm="searchTerm" :effects="effects"/>
 
   </div>
 
@@ -111,11 +117,9 @@
 
 
   import AdverseEffectsBox from './AdverseEffectsBox.vue'
-  import FDASearch from '../services/FDASearchService.js'
-  // import {loadInfo_IntoVariable, convertTermToURL} from '../services/GetService.js'
+  import {loadInfo_IntoVariable, convertTermToURL} from '../services/FDASearchService.js'
   import ReminderService from '../services/ReminderService.js'
   
-  var $ = require('jquery');
 
 
   export default {
@@ -126,6 +130,7 @@
       searchTerm: String,
       submitted: Boolean,
       _submitted_medicine: Boolean,
+      _submitted_search: Boolean,
       supplyDays: Number,
       effects: Array
     },
@@ -134,6 +139,7 @@
     data: {
       submitted:false,
       _submitted_medicine: false,
+      _submitted_search: false,
       supplyDays:0,
       effects: null
     },
@@ -166,24 +172,29 @@
     methods: {
       Go_handler: function() {
         this._submitted_medicine=true;
+        this._submitted_search=true;
+
         this.FDA_Adverse_Search();
       },
 
       FDA_Adverse_Search: function () {
       
+        var term;
+        if (typeof this.searchTerm !== 'undefined') {
+          term = this.searchTerm;
+        } else {
+          term = "nonsteroidal anti-inflammatory drug";
+        }
+        
+        var searchURL = convertTermToURL(term);
+        console.log(searchURL);
 
-        var searchURL = new FDASearch(this.searchTerm).convertTermToURL();
-        console.log("calling: "+searchURL);
 
-        $axios.get(searchURL)
-         .then( function (data){
-
-            // Load response adverse effects terms into variable `effects`
-            for (var i in data.results) {
-              this.effects.push(data.results[i].term);
-            }
-            // console.log(this.effects);
-          });
+        this.$axios
+          .get(searchURL)
+          .then(response => (
+         this.effects = loadInfo_IntoVariable(response.data.results)
+          ))
        }
 
 
