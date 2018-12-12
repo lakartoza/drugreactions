@@ -9,36 +9,36 @@ export default class FDASearch {
     this.searchTerm = drugSearchTerm;
   }
 
-  AdverseEffects() {
+  // AdverseEffects() {
     
-    var searchURL = this.convertTermToURL(this.searchTerm);
+  //   var searchURL = this.convertTermToURL(this.searchTerm);
     
-    console.log("calling: "+searchURL);
+  //   console.log("calling: "+searchURL);
 
-    $.get(searchURL)
-     .then( function (data){
+  //   $.get(searchURL)
+  //    .then( function (data){
 
-        // Load response adverse effects terms into variable `effects`
-        var effects = [];
-        for (var i in data.results) {
-          effects.push(data.results[i].term);
-        }
-        console.log(effects);
-        return effects;
-      });
+  //       // Load response adverse effects terms into variable `effects`
+  //       var effects = [];
+  //       for (var i in data.results) {
+  //         effects.push(data.results[i].term);
+  //       }
+  //       console.log(effects);
+  //       return effects;
+  //     });
 
 
-  }
+  // }
 
   //Supporting functions for Search API Calls//
 
-  convertTermToURL(human_search_input) {
+  convertTermToURL() {
     var baseURL = "https://api.fda.gov/drug/event.json?";
     var url_search_term;
     var search_url;
 
     //Process search term to fit url
-    url_search_term = human_search_input.toLowerCase();
+    url_search_term = this.searchTerm.toLowerCase();
     url_search_term = url_search_term.split(" ").join("+");
 
     //combine to make FDA url to GET 
@@ -47,9 +47,5 @@ export default class FDASearch {
     return search_url;
   }
 
-  loadInfo_IntoVariable (results) {
-      
-      return effects;
-  }
 
 }

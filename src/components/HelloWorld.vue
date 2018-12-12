@@ -170,15 +170,24 @@
       },
 
       FDA_Adverse_Search: function () {
-        console.log('requested.');
-        var deferredEffects;
-        deferredEffects = $.Deferred(new FDASearch(this.searchTerm).AdverseEffects());
+      
 
-        // deferredEffects.done(this.effects)
-        console.log(typeof deferredEffects);
-        this.effects = deferredEffects;
-      }
-    },
+        var searchURL = new FDASearch(this.searchTerm).convertTermToURL();
+        console.log("calling: "+searchURL);
+
+        $axios.get(searchURL)
+         .then( function (data){
+
+            // Load response adverse effects terms into variable `effects`
+            for (var i in data.results) {
+              this.effects.push(data.results[i].term);
+            }
+            // console.log(this.effects);
+          });
+       }
+
+
+     },
     components: {
       AdverseEffectsBox
     }
