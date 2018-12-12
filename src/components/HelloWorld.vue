@@ -55,8 +55,8 @@
         <div class="col"></div>
 
         <div class="col-3" >
-          <input v-model="medicine" placeholder="Medicine" class="stretched_input">
-          <button v-on:click="_submitted_medicine=true"> Go </button>
+          <input v-model="searchTerm" placeholder="Medicine" class="stretched_input">
+          <button v-on:click="Go_handler" ref="AdverseEffectsSearch"> Go </button>
         </div>
         <div class="col"></div>
       </div>
@@ -64,11 +64,11 @@
       <div v-show="_submitted_medicine" class="row">
         <div class="col"></div>
 
-          <p>How much supply of {{ medicine }} do you have?</p>
+          <p>How much supply of {{ searchTerm }} do you have?</p>
 
         <div class="col-3">          
           <select v-model="supplyDays">
-            <option :value="0" disabled selected>Days of {{medicine}} Supply</option>
+            <option :value="0" disabled selected>Days of {{searchTerm}} Supply</option>
             <option v-for="period in [30,60,90,120]" :value="period"> {{period}} days</option>
           </select>
           </div>
@@ -87,7 +87,7 @@
         <div v-show="submitted">
         <p>
           We'll send you an reminder to refill your 
-          {{ medicine}} subscription on 
+          {{ searchTerm}} subscription on 
           {{ reminderDate.Month}}-{{ reminderDate.Day}} {{ reminderDate.Year}}.
 
         <p><a href="http://motherfuckingwebsite.com/">Learn how
@@ -98,7 +98,7 @@
       </div>  
     </div>
 
-    <AdverseEffectsBox/>
+    <AdverseEffectsBox :searchTerm="searchTerm" :effects="effects"/>
 
   </div>
 
@@ -110,26 +110,29 @@
 <script>
 
   import AdverseEffectsBox from './AdverseEffectsBox.vue'
+  import {loadInfo_IntoVariable, convertTermToURL} from '../services/GetService.js'
+  import ReminderService from '../services/ReminderService.js'
+
 
   export default {
     name: 'HelloWorld',
     props: {
       fullName: String,
       email: String,
-      medicine: String,
+      searchTerm: String,
       submitted: Boolean,
       _submitted_medicine: Boolean,
       supplyDays: Number,
-      reminderDate: Array,
+      effects: Array
     },
 
 
     data: {
       submitted:false,
       _submitted_medicine: false,
-      supplyDays:0
+      supplyDays:0,
+      effects: null
     },
-
 
     computed: {
 
@@ -146,36 +149,47 @@
 
       reminderDate: function () {
         if (typeof this.supplyDays !== 'undefined') {
-          var currentDate = new Date();
-          // add supplyDays to current date
-          var reminderDate = currentDate.addDays(this.supplyDays - 5);
-          var Day = reminderDate.toString().split(" ")[2];
-          var Month = reminderDate.toString().split(" ")[1];
-          var Year = reminderDate.toString().split(" ")[3];
+          // get date to remind 5 days ahead of supply end
+          var reminderDate = new ReminderService(this.supplyDays, 5).date;
 
-          return {Day,Month,Year}
+          return reminderDate; //returned format: {Day,Month,Year}
         } else { 
-            return ''
+            return '' //define something for onload
         }
+      }
+    },
+
+    methods: {
+      Go_handler: function() {
+        this._submitted_medicine=true;
+        this.FDA_Adverse_Search();
+      },
+
+      FDA_Adverse_Search: function () {
+        var term;
+        if (typeof this.searchTerm !== 'undefined') {
+          term = this.searchTerm;
+        } else {
+          term = "nonsteroidal anti-inflammatory drug";
+        }
+        
+        
+
+        var searchURL = convertTermToURL(term);
+        console.log(searchURL);
+
+
+        this.$axios
+          .get(searchURL)
+          .then(response => (
+         this.effects = loadInfo_IntoVariable(response.data.results)
+          ))
       }
     },
     components: {
       AdverseEffectsBox
     }
   }
-
-
-  //Extend the javascript Date object 
-  Date.prototype.addDays = function(days) {
-      this.setDate(this.getDate() + parseInt(days));
-      return this;
-  };
-
-  //Extend to give month names
-  Date.prototype.monthNames = ["January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
 
 
 </script>
