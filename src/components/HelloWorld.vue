@@ -109,9 +109,13 @@
 
 <script>
 
+
   import AdverseEffectsBox from './AdverseEffectsBox.vue'
-  import {loadInfo_IntoVariable, convertTermToURL} from '../services/GetService.js'
+  import FDASearch from '../services/FDASearchService.js'
+  // import {loadInfo_IntoVariable, convertTermToURL} from '../services/GetService.js'
   import ReminderService from '../services/ReminderService.js'
+  
+  var $ = require('jquery');
 
 
   export default {
@@ -166,24 +170,13 @@
       },
 
       FDA_Adverse_Search: function () {
-        var term;
-        if (typeof this.searchTerm !== 'undefined') {
-          term = this.searchTerm;
-        } else {
-          term = "nonsteroidal anti-inflammatory drug";
-        }
-        
-        
+        console.log('requested.');
+        var deferredEffects;
+        deferredEffects = $.Deferred(new FDASearch(this.searchTerm).AdverseEffects());
 
-        var searchURL = convertTermToURL(term);
-        console.log(searchURL);
-
-
-        this.$axios
-          .get(searchURL)
-          .then(response => (
-         this.effects = loadInfo_IntoVariable(response.data.results)
-          ))
+        // deferredEffects.done(this.effects)
+        console.log(typeof deferredEffects);
+        this.effects = deferredEffects;
       }
     },
     components: {
