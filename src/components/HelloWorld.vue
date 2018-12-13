@@ -43,12 +43,7 @@
 
       <div class="row centered">
         <div class="col-md-10 col-sm-12 centered">
-          <Autocomplete 
-            v-model="searchTerm" 
-            placeholder="Active Ingredient in your Rx" 
-            class="stretched_input"
-            :items="[ 'Apple', 'nonsteroidal anti-inflammatory drug', 'Orange', 'Mango', 'Pear', 'Peach', 'Grape', 'Tangerine', 'Pineapple']" 
-            />
+          <Autocomplete v-model="searchTerm" class="stretched_input" />
 
           <button v-on:click="Go_handler" ref="AdverseEffectsSearch"> Search </button>
         </div>
@@ -61,7 +56,7 @@
 
         <div class="col-3">          
           <select v-model="supplyDays">
-            <option :value="0" disabled selected>Days of {{searchTerm}} Supply</option>
+            <option :value="0" disabled selected>Days of Supply</option>
             <option v-for="period in [30,60,90,120]" :value="period"> {{period}} days</option>
           </select>
           </div>  
@@ -122,7 +117,7 @@
       _submitted_medicine: false,
       _submitted_search: false,
       supplyDays:0,
-      effects: null
+      effects: null,
     },
 
     computed: {
