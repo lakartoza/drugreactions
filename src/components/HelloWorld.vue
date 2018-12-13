@@ -57,7 +57,7 @@
       <div class="row">
         <div class="col"></div>
 
-        <div class="col-3" >
+        <div class="col-md-6 col-sm-12">
           <input v-model="searchTerm" placeholder="Medicine" class="stretched_input">
           <button v-on:click="Go_handler" ref="AdverseEffectsSearch"> Search </button>
         </div>
