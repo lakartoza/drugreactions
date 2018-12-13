@@ -11,80 +11,64 @@
 
     <div class="container">
       <div class="row">
-        <div class="col"></div>
         <div class="col-md-6 col-sm-12 lefted">
           <h3>First, about you:</h3>
           <br>
         </div>
-        <div class="col"></div>
-
       </div>
 
       <div class="row">
-        <div class="col"></div>
-
         <div class="col-md-6 col-sm-12">
           <input v-model="fullName" placeholder="Full Name" class="stretched_input">
           <input v-model="email" placeholder="Your Email" class="stretched_input">
-
         </div>
-
-
-        <div class="col"></div>
       </div>
 
 
 
-      <div class="row">
-        <div class="col"></div>
+      <div class="row">      
         <div class="col-md-6 col-sm-12 lefted">
           <h3>Remind me about...</h3>
           <br>
         </div>
-
-        <div class="col"></div>
-
       </div>
 
       <div class="row">
-        <div class="col"></div>
+        
         <div class="col-md-6 col-sm-12">
           <p>Hi{{ firstName }}! What medicine do you want to be reminded about?</p>
         </div>
-        <div class="col"></div>
+        
       </div>
 
-      <div class="row">
-        <div class="col"></div>
+      <div class="row centered">
+        <div class="col-md-10 col-sm-12 centered">
+          <Autocomplete 
+            v-model="searchTerm" 
+            placeholder="Active Ingredient in your Rx" 
+            class="stretched_input"
+            :items="[ 'Apple', 'nonsteroidal anti-inflammatory drug', 'Orange', 'Mango', 'Pear', 'Peach', 'Grape', 'Tangerine', 'Pineapple']" 
+            />
 
-        <div class="col-md-6 col-sm-12">
-          <input v-model="searchTerm" placeholder="Medicine" class="stretched_input">
           <button v-on:click="Go_handler" ref="AdverseEffectsSearch"> Search </button>
         </div>
-        <div class="col"></div>
+        
       </div>
 
       <div v-show="_submitted_medicine" class="row">
-        <div class="col"></div>
-
-          <p>How much supply of {{ searchTerm }} do you have?</p>
+        
+          <p>How much supply of Rx do you have?</p>
 
         <div class="col-3">          
           <select v-model="supplyDays">
             <option :value="0" disabled selected>Days of {{searchTerm}} Supply</option>
             <option v-for="period in [30,60,90,120]" :value="period"> {{period}} days</option>
           </select>
-          </div>
-
-
-        <div class="col"></div>
+          </div>  
       </div>
 
 
       <div class="row">      
-      
-        <div class="col"></div>
-
         <div v-show="submitted">
           <p>
             We'll send you an reminder to refill your 
@@ -96,16 +80,13 @@
             </p>
         </div>
 
-
         <button v-show="_submitted_medicine" v-on:click="submitted=true">Set Reminder</button>
-        <div class="col"></div>
-
       </div>  
 
     </div>
 
     <AdverseEffectsBox v-show="submitted" :searchTerm="searchTerm" :effects="effects"/>
-
+    <div class="footer"></div>
   </div>
 
 
@@ -119,7 +100,7 @@
   import AdverseEffectsBox from './AdverseEffectsBox.vue'
   import {loadInfo_IntoVariable, convertTermToURL} from '../services/FDASearchService.js'
   import ReminderService from '../services/ReminderService.js'
-  
+  import Autocomplete from './Autocomplete.vue'
 
 
   export default {
@@ -200,7 +181,8 @@
 
      },
     components: {
-      AdverseEffectsBox
+      AdverseEffectsBox,
+      Autocomplete
     }
   }
 
@@ -210,17 +192,43 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
-.lefted {
-  text-align: left;
+.container {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    /* text-align: center; */
+    text-align: -webkit-center;
+}
+
+.row {
+  display: block !important;
 
 }
+
+
+.lefted {
+  text-align: left;
+}
+
+.centered {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 
 .stretched_input {
   width: -webkit-fill-available;
-  /*min-width: 150px;*/
+  min-width: 150px;
   max-width: 300px;
   margin-bottom: 30px;
 }
+
+.footer {
+  display: block;
+  height: 400px;
+}
+
 h3 {
   margin: 40px 0 0;
 }
