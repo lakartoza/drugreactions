@@ -45,12 +45,12 @@
         <div class="col-md-10 col-sm-12 centered">
           <Autocomplete v-model="searchTerm" class="stretched_input" />
 
-          <button v-on:click="Go_handler" ref="AdverseEffectsSearch"> Search </button>
+          <button v-show="!_submitted_search" v-on:click="Go_handler" ref="AdverseEffectsSearch"> Search </button>
         </div>
         
       </div>
 
-      <div v-show="_submitted_medicine" class="row">
+      <div v-if="_submitted_search" class="row">
         
           <p>How much supply of Rx do you have?</p>
 
@@ -75,7 +75,9 @@
             </p>
         </div>
 
-        <button v-show="_submitted_medicine" v-on:click="submitted=true">Set Reminder</button>
+        <div>
+          <button v-show="_submitted_medicine" v-on:click="submitted=true">Set Reminder</button>
+        </div>
       </div>  
 
     </div>
